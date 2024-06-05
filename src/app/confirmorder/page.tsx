@@ -73,7 +73,7 @@ const confirmorder = () =>{
         
         alert("confirmed your order");
 
-        axios.post('http://localhost:8081/enter',value).then(res => {
+        axios.post('https://backend-res-fecn.onrender.com/enter',value).then(res => {
             if(res.status == 200){
                 alert(res);
             }

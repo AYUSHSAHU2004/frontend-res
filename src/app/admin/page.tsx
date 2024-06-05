@@ -13,7 +13,7 @@ const Admin = () => {
     const [totalsum,setTotalsum] = useState();
 
     useEffect(() => {
-        axios.get("http://localhost:8081/get")
+        axios.get("https://backend-res-fecn.onrender.com/get")
             .then((res) => {
                 setItems(res.data);
                 
