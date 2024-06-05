@@ -21,7 +21,9 @@ const Admin = () => {
             .catch((err) => console.log(err));
     }, [itemsi]);
     useEffect(() => {
-        let newSums = [];
+        //CGANGE1 let newSums = [];
+        let newSums: number[] = [];
+
         let totalsum = 0; // Initialize an array to store the new sums
         itemsi.forEach(item => {
             let total = 0;
