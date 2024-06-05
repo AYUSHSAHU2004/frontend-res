@@ -7,10 +7,19 @@ import Typography from '@mui/material/Typography';
 import axios from 'axios';
 
 const Admin = () => {
-    const [itemsi, setItems] = useState([]);
-    const [selectedCard, setSelectedCard] = useState([]);
-    const [sum,setSum] = useState();
-    const [totalsum,setTotalsum] = useState();
+    //const [itemsi, setItems] = useState([]);
+    const [itemsi, setItems] = useState<{ table_number: string, items: { name: string, price: number }[], first_name: string }[]>([]);
+
+
+   // const [selectedCard, setSelectedCard] = useState([]);
+   const [selectedCard, setSelectedCard] = useState<number[]>([]);
+
+    //const [sum,setSum] = useState();
+    const [sum, setSum] = useState<number[]>([]);
+
+    //const [totalsum,setTotalsum] = useState();
+    const [totalsum, setTotalsum] = useState<number>(0);
+
 
     useEffect(() => {
         axios.get("https://backend-res-fecn.onrender.com/get")
@@ -24,18 +33,26 @@ const Admin = () => {
         //CGANGE1 let newSums = [];
         let newSums: number[] = [];
 
-        let totalsum = 0; // Initialize an array to store the new sums
-        itemsi.forEach(item => {
+        let totalsum: number = 0;
+        // Initialize an array to store the new sums
+        itemsi.forEach((item,index) => {
             let total = 0;
             
-            if (Array.isArray(item.items)) {
+            // if (Array.isArray(item.items)) {
+            //     item.items.forEach(food => {
+            //         total += parseInt(food.price);
+            //     });
+            // }
+            if (Array.isArray(item?.items)) {
                 item.items.forEach(food => {
                     total += parseInt(food.price);
                 });
             }
             newSums.push(total); // Push the calculated total to the newSums array
         });
-        setSum(newSums);
+        //setSum(newSums);
+        setSum(newSums as number[]);
+
         newSums.forEach((price)=>{
             totalsum = price + totalsum;
         })
@@ -45,7 +62,7 @@ const Admin = () => {
     
     
 
-    const handleCardClick = (index) => {
+    const handleCardClick = (index : number) => {
 
        
         if (selectedCard.includes(index)) {
