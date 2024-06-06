@@ -22,7 +22,7 @@ const Admin = () => {
 
 
     useEffect(() => {
-        axios.get("https://backend-res-fecn.onrender.com/get")
+        axios.get("https://backend-res-1.onrender.com/get")
             .then((res) => {
                 setItems(res.data);
                 
