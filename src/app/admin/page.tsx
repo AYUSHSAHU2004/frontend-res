@@ -45,7 +45,9 @@ const Admin = () => {
             // }
             if (Array.isArray(item?.items)) {
                 item.items.forEach(food => {
-                    total += parseInt(food.price);
+                    total +=(parseInt(`${food.price}`));
+                    //changed
+                    //total +=(parseInt(food.price));
                 });
             }
             newSums.push(total); // Push the calculated total to the newSums array

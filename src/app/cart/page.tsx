@@ -11,32 +11,30 @@ import Typography from '@mui/material/Typography';
 import AddTaskTwoToneIcon from '@mui/icons-material/AddTaskTwoTone';
 import Link from 'next/link';
 
+interface CartItem {
+    id: string;
+    name: string;
+    img: string;
+    // Add other properties as needed
+}
 
 const Cart = () => {
-  const [items, setItems] = useState([]);
- 
-
+  const [items, setItems] = useState<CartItem[]>([]); // Explicitly typing items as CartItem[]
 
   useEffect(() => {
-    const cartItems = JSON.parse(localStorage.getItem("cart")) || [];
+    const cartItems: CartItem[] = JSON.parse(localStorage.getItem("cart") || "[]");
     setItems([...cartItems]);
   }, []);
 
-  
-  const handleRemoveFromCart = (index) => {
-   
-    const updatedCart = items.filter((item,indexi) => indexi !== index);
-    
-   
+  const handleRemoveFromCart = (index: number) => {
+    const updatedCart = items.filter((item, indexi) => indexi !== index);
     setItems(updatedCart);
     localStorage.setItem("cart", JSON.stringify(updatedCart));
-    alert(`we removed ${items[index].name} of index ${index} so now we have ${updatedCart[index].name} at index ${index}` );
-    
-    
-    
+    alert(`Removed ${items[index].name} from the cart.`);
   };
-  const placeorder = () => {
-    alert("confirm your Order");
+
+  const placeOrder = () => {
+    alert("Confirm your Order");
   }
 
   return (
@@ -44,12 +42,12 @@ const Cart = () => {
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '35px', fontFamily: 'cursive' }}>
         Your Orders
       </div>
-      <div style={{ display: 'flex',"margin":"80px 0", flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center', gap: '80px' }}>
-        {items?.map((item,index) => (
+      <div style={{ display: 'flex', "margin": "80px 0", flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center', gap: '80px' }}>
+        {items?.map((item, index) => (
           <Card key={item.id} sx={{ maxWidth: 345 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <CardHeader title={item.name} />
-              <a href = "/cart" style={{ cursor: 'pointer' }} onClick={() => handleRemoveFromCart(index)}>
+              <a href="/cart" style={{ cursor: 'pointer' }} onClick={() => handleRemoveFromCart(index)}>
                 <CardHeader title={<DeleteIcon />} subheader="Remove From Order" />
               </a>
             </div>
@@ -64,25 +62,25 @@ const Cart = () => {
           </Card>
         ))}
       </div>
-      
-      <div style={{ display: 'flex',"cursor":"pointer","backgroundColor":"whitesmoke" ,"justifyContent":"space-around", 'alignItems': 'center', 'fontFamily': 'cursive',"position":"fixed","bottom":"0px","width":"100%","padding":"15px 0" }}>
-      <Link style={{ display: 'flex',"textDecoration":"none","flexDirection":"column","cursor":"pointer","backgroundColor":"whitesmoke" ,'justifyContent': 'center', 'alignItems': 'center', 'fontFamily': 'cursive' }} href="/home">
-            <div>
-            <MenuBookIcon/>
-            
-            </div>
-            <div>
+
+      <div style={{ display: 'flex', "cursor": "pointer", "backgroundColor": "whitesmoke", "justifyContent": "space-around", 'alignItems': 'center', 'fontFamily': 'cursive', "position": "fixed", "bottom": "0px", "width": "100%", "padding": "15px 0" }}>
+        <Link style={{ display: 'flex', "textDecoration": "none", "flexDirection": "column", "cursor": "pointer", "backgroundColor": "whitesmoke", 'justifyContent': 'center', 'alignItems': 'center', 'fontFamily': 'cursive' }} href="/home">
+          <div>
+            <MenuBookIcon />
+
+          </div>
+          <div>
             Add More Dishes
-            </div>
-      </Link>
-      <Link href="/confirmorder" onClick={()=>placeorder()} style={{ display: 'flex',"textDecoration":"none","flexDirection":"column","cursor":"pointer","backgroundColor":"whitesmoke" ,'justifyContent': 'center', 'alignItems': 'center', 'fontFamily': 'cursive'}}>
-        <div>
-            <AddTaskTwoToneIcon/>
-        </div>
-        <div>
+          </div>
+        </Link>
+        <Link href="/confirmorder" onClick={placeOrder} style={{ display: 'flex', "textDecoration": "none", "flexDirection": "column", "cursor": "pointer", "backgroundColor": "whitesmoke", 'justifyContent': 'center', 'alignItems': 'center', 'fontFamily': 'cursive' }}>
+          <div>
+            <AddTaskTwoToneIcon />
+          </div>
+          <div>
             Place Order
-        </div>
-      </Link>
+          </div>
+        </Link>
       </div>
     </div>
   );

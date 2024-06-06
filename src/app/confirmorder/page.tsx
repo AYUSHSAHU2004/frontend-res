@@ -12,10 +12,20 @@ import Typography from '@mui/material/Typography';
 import axios from 'axios';
 import AddTaskTwoToneIcon from '@mui/icons-material/AddTaskTwoTone';
 import Link from 'next/link';
+
+
+
+
+interface CartItem {
+    id: number;
+    name: string;
+    img: string;
+    // Add other properties as needed
+}
 const confirmorder = () =>{
-    const [cart, setCart] = useState([]);
-    const [numb,setNum] = useState();
-    const [pnumb,setPnum] = useState();
+    const [cart, setCart] = useState<CartItem[]>([]);
+    const [numb, setNum] = useState<number>(0); // Initialize numb as a number with an initial value of 0
+    const [pnumb, setPnumb] = useState<string | undefined>('');
     const [name,setname] = useState("");
    
     const [value,setValue] = useState({
@@ -24,34 +34,39 @@ const confirmorder = () =>{
         "first_name":"",
         "items":{}
     });
-    const handleAddToCart = (item) => {
+    const handleAddToCart = (item: CartItem) => {
         setCart([...cart, item]);
         alert(`Added ${item.name} to cart`);
-        
-        
-      };
-      useEffect(()=>{
-        console.log(cart);
-        setValue({
-            "phone_number": pnumb,
-            "table_number": numb,
-            "first_name": name,
-            "items":cart
-        })
-      },[cart]);
+    };
 
-      useEffect(()=>{
-        const prevItems = JSON.parse(localStorage.getItem("cart")) || [] ;
-        if(prevItems.length !=0){
-            setCart(prevItems);
-        };
+    useEffect(() => {
+        console.log(cart);
+        const phoneNumber = typeof pnumb === 'string' ? pnumb : "";
+        const tableNumber = typeof numb === 'string' ? numb : "";
+        setValue({
+            "phone_number": phoneNumber,
+            "table_number": tableNumber,
+            "first_name": name,
+            "items": cart
+        });
+    }, [cart, numb, pnumb, name]);
     
-        
-    },[]);
+    
+
+    useEffect(() => {
+        const storedItemsString = localStorage.getItem("cart");
+        if (storedItemsString !== null) {
+            const prevItems = JSON.parse(storedItemsString);
+            if (prevItems.length !== 0) {
+                setCart(prevItems);
+            }
+        }
+    }, []);
+    
     useEffect(()=>{
 
     },[]);
-    function sendProps(numb){
+    function sendProps(numb:number){
        // Log cart state
        
        if(!numb){
@@ -59,8 +74,9 @@ const confirmorder = () =>{
         return;
        }
         localStorage.setItem("cart", JSON.stringify(cart));
-        localStorage.setItem("tableno.",numb);
-        localStorage.setItem("pnumb.",pnumb);
+        localStorage.setItem("tableno.", numb?.toString() ?? ''); // Convert numb to string or use an empty string if undefined
+        localStorage.setItem("pnumb.", (pnumb ?? '').toString()); // Convert pnumb to string or use an empty string if undefined
+
         localStorage.setItem("name.",name);
         // setValue({
         //     phone_number: pnumb,
@@ -84,41 +100,56 @@ const confirmorder = () =>{
         // Log localStorage item
       };
     
-    function savenumb(e){
-       
-        setNum(e.target.value);
-        localStorage.setItem("tno.",e.target.value);
+      function savenumb(e: React.ChangeEvent<HTMLInputElement>) {
+        const value = e.target.value; // Get the input value as a string
+        const numericValue = parseInt(value); // Convert the string value to a number
+    
+        if (!isNaN(numericValue)) { // Check if the conversion is successful
+            setNum(numericValue); // Set the number value to the state variable
+            localStorage.setItem("tno.", numericValue.toString()); // Store the number value in localStorage
+        } else {
+            // Handle the case where the input value is not a valid number
+            console.error("Invalid input value:", value);
+        }
+    
         setValue({
-            "phone_number": pnumb,
-            "table_number": numb,
+            "phone_number": pnumb?.toString() ?? '', // Convert pnumb to string or use an empty string if undefined
+            "table_number": numb?.toString() ?? '', // Convert numb to string or use an empty string if undefined
             "first_name": name,
-            "items":cart
-        })
+            "items": cart
+        });
+        
+        
     }
-    function savePnumb(e){
-       
-        setPnum(e.target.value);
-        localStorage.setItem("pno.",e.target.value);
+    
+    
+    function savePnumb(e: React.ChangeEvent<HTMLInputElement>) {
+        const newValue = e.target.value;
+        setPnumb(newValue); // Corrected function name
+        localStorage.setItem("pno.", newValue);
         
         setValue({
-            "phone_number": pnumb,
-            "table_number": numb,
+            "phone_number": newValue ? newValue.toString() : "", // Handle undefined case
+            "table_number": numb ? numb.toString() : "", // Handle undefined case
             "first_name": name,
-            "items":cart
-        })
+            "items": cart
+        });
     }
-    function savename(e){
-       
+    
+    
+    function savename(e: React.ChangeEvent<HTMLInputElement>) {
         setname(e.target.value);
-        localStorage.setItem("ne.",e.target.value);
-
+        localStorage.setItem("ne.", e.target.value);
+    
         setValue({
-            "phone_number": pnumb,
-            "table_number": numb,
+            "phone_number": pnumb?.toString() ?? '', // Convert pnumb to string or use an empty string if undefined
+            "table_number": numb?.toString() ?? '', // Convert numb to string or use an empty string if undefined
             "first_name": name,
-            "items":cart
-        })
+            "items": cart
+        });
+        
     }
+    
     return(
             <>
                 <div>
@@ -169,7 +200,13 @@ const confirmorder = () =>{
                 <CardHeader
                   title={`${item.name}`}
                 />
-                <div onClick={() => handleAddToCart(item)} style={{"cursor":"pointer"}}>
+                                    <div onClick={() => handleAddToCart({
+                            id: parseInt(item.id),
+                            name: item.name,
+                            img: item.img,
+                        })} style={{"cursor":"pointer"}}>
+
+
                   <CardHeader
                     title={<ShoppingCartIcon/>}
                     subheader="Add To Cart"
@@ -209,7 +246,7 @@ const confirmorder = () =>{
 
 
                 <div onClick={()=>localStorage.setItem("cart", JSON.stringify(cart))}>
-                    <Link href="/cart"  style={{"textDecoration":"none","flexDirection":"column","display":"flex","fontSize":"25px","cursor":"pointer","backgroundColor":"#f5f5f5","height":"80px","display":"flex","justifyContent":"center","alignItems":"center"}}>
+                    <Link href="/cart"  style={{"textDecoration":"none","flexDirection":"column","display":"flex","fontSize":"25px","cursor":"pointer","backgroundColor":"#f5f5f5","height":"80px","justifyContent":"center","alignItems":"center"}}>
                         <FastfoodIcon/>
                 
                         <div>

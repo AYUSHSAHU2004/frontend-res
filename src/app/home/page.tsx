@@ -15,7 +15,14 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import { items } from '../data';
 
-const ExpandMore = styled((props) => {
+
+
+interface ExpandMoreProps {
+  expand: boolean;
+  // Add other props if needed
+}
+
+const ExpandMore = styled((props: ExpandMoreProps) => {
   const { expand, ...other } = props;
   return <IconButton {...other} />;
 })(({ theme, expand }) => ({
@@ -29,11 +36,12 @@ const ExpandMore = styled((props) => {
 const RecipeReviewCard = () => {
   const [expanded, setExpanded] = useState(false);
   const [filters, setFilters] = useState({ category: '', keyword: '', type: '' });
-  const [cart, setCart] = useState([]);
+  const [cart, setCart] = useState<CartItem[]>([]);
   const router = useRouter();
  // Initialize useHistory
     useEffect(()=>{
-        const prevItems = JSON.parse(localStorage.getItem("cart")) || [] ;
+      const prevItems = JSON.parse(localStorage.getItem("cart") || "[]");
+
         if(prevItems.length !=0){
             setCart(prevItems);
         }
@@ -43,14 +51,18 @@ const RecipeReviewCard = () => {
     setExpanded(!expanded);
   };
 
-  const handleFilterChange = (filterName, value) => {
+  const handleFilterChange = (filterName: string, value: any) => {
     setFilters({ ...filters, [filterName]: value });
-  };
+};
+interface CartItem {
+  name: string;
+  // Add other properties of item if applicable
+}
 
-  const handleAddToCart = (item) => {
-    setCart([...cart, item]);
-    alert(`Added ${item.name} to cart`);
-  };
+const handleAddToCart = (item: CartItem) => {
+  setCart([...cart, item]);
+  alert(`Added ${item.name} to cart`);
+};
   function sendProps(){
     alert("See Your Cart"); // Log cart state
     localStorage.setItem("cart", JSON.stringify(cart));
