@@ -24,7 +24,7 @@ const Admin = () => {
     useEffect(() => {
         axios.get("https://backend-res-1.onrender.com/get")
             .then((res) => {
-                setItems(res.data);
+                setItems(res.data.orders);
                 
             })
             .catch((err) => console.log(err));

@@ -19,6 +19,7 @@ const confirmorder = () =>{
     const [name,setname] = useState("");
    
     const [value,setValue] = useState({
+        "order_id":"1",
         "phone_number":"",
         "table_number":"",
         "first_name":"",
@@ -33,6 +34,7 @@ const confirmorder = () =>{
       useEffect(()=>{
         console.log(cart);
         setValue({
+            "order_id":"1",
             "phone_number": pnumb,
             "table_number": numb,
             "first_name": name,
@@ -71,9 +73,8 @@ const confirmorder = () =>{
         console.log(value);
         
         
-        alert("confirmed your order");
 
-        axios.post('https://backend-res-fecn.onrender.com/enter',value).then(res => {
+        axios.post('https://backend-res-1.onrender.com/enter',value).then(res => {
             if(res.status == 200){
                 alert(res);
             }
@@ -89,6 +90,7 @@ const confirmorder = () =>{
         setNum(e.target.value);
         localStorage.setItem("tno.",e.target.value);
         setValue({
+            "order_id":"1",
             "phone_number": pnumb,
             "table_number": numb,
             "first_name": name,
@@ -101,6 +103,7 @@ const confirmorder = () =>{
         localStorage.setItem("pno.",e.target.value);
         
         setValue({
+            "order_id":"1",
             "phone_number": pnumb,
             "table_number": numb,
             "first_name": name,
@@ -113,6 +116,7 @@ const confirmorder = () =>{
         localStorage.setItem("ne.",e.target.value);
 
         setValue({
+            "order_id":"1",
             "phone_number": pnumb,
             "table_number": numb,
             "first_name": name,
