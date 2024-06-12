@@ -15,6 +15,7 @@ interface CartItem {
     id: string;
     name: string;
     img: string;
+    price: string;
     // Add other properties as needed
 }
 
