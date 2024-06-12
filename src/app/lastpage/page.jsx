@@ -76,6 +76,9 @@ useEffect(()=>{
               <Typography variant="body2" color="text.secondary">
                 This impressive paella is a perfect party dish and a fun meal to cook together with your guests. Add 1 cup of frozen peas along with the mussels, if you like.
               </Typography>
+              <Typography style={{"fontWeight":"700"}} variant="body2" color="black">
+                   Price: {item.price} Rs
+                </Typography>
             </CardContent>
             <CardActions disableSpacing>
             </CardActions>
